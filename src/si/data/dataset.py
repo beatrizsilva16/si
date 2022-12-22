@@ -1,18 +1,17 @@
-import numpy as np
 import pandas as pd
+import numpy as np
 
 
 class Dataset:
-
-    def __init__(self, x, y, features, label):
-        self.x = x
+    def __init__(self, X: np.ndarray, y: np.ndarray, features: list, label: str):
+        self.X = X
         self.y = y
         self.features = features
         self.label = label
 
     def shape(self):
         # dimensões dataset
-        return self.x.shape
+        return self.X.shape
 
     def has_label(self):
         # verfica se o dataset tem y
@@ -25,23 +24,24 @@ class Dataset:
 
     def get_mean(self):
         # devolve média para cada variável dependente
-        return np.mean(self.x, axis=0)  # axis 0: colunas, axis 1: exemplos
+        return np.mean(self.X, axis=0)  # axis 0: refers to horizontal axis or rows, axis 1: refers to vertical axis or
+        # columns (exemplos)
 
     def get_variance(self):
         # devolve variância para cada variável dependente
-        return np.var(self.x, axis=0)
+        return np.var(self.X, axis=0)
 
     def get_median(self):
         # devolve mediana para cada variável dependente
-        return np.median(self.x, axis=0)
+        return np.median(self.X, axis=0)
 
     def get_min(self):
         # devolve valor mínimo para cada variável dependente
-        return np.min(self.x, axis=0)
+        return np.min(self.X, axis=0)
 
     def get_max(self):
         # devolve valor máximo para cada variável dependente
-        return np.max(self.x, axis=0)
+        return np.max(self.X, axis=0)
 
     def summary(self):
         # devolve pandas DataFrame com todas as métricas descritivas
@@ -53,8 +53,6 @@ class Dataset:
         df.loc['max'] = self.get_max()
         return df
 
-
-# função teste
 
 if __name__ == '__main__':
     x = np.array([[1, 2, 3], [1, 2, 3]])
