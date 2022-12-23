@@ -76,5 +76,5 @@ if __name__ == '__main__':
                       np.array([1,2,3,4]),
                       ["1","2","3","4"], "5")
 
-    temp = VarianceThreshold(1)
-    print(temp.fit_transform(dataset))
+    ex1 = VarianceThreshold(1)
+    print(ex1.fit_transform(dataset))
