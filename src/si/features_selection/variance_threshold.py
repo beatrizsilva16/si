@@ -11,15 +11,19 @@ class VarianceThreshold:
         i.e. remove the features that have the same value in all samples.
     """
 
-    def __int__(self, threshlod:float):
+    def __int__(self, threshlod: float):
+
+        if threshlod < 0:
+            raise ValueError("Threshold must be positive")
+
         self.threshold = threshlod
-        self.variance = None #está vazio porque não vamos calcular variance aqui
+        self.variance = None #está vazio porque não vamos calcular variance aqui, não há dataset
 
 
 
     def fit(self, dataset: object):
 
-        """Learn empirical variances from X.
+        """ Estima/calcula a variância de cada feature; retorna o self (ele próprio)
          Parameters
         ----------
         X : {array-like, sparse matrix}, shape (n_samples, n_features)
@@ -40,20 +44,23 @@ class VarianceThreshold:
 
     def transform (self, dataset: object) -> object: # vai retornar um novo dataset
 
-        mask = self.variance > self.thresh
+        """
+        Seleciona todas as features com variância superior ao threshold e
+        retorna o X selecionado
+        """
+        mask = self.variance > self.threshold
         newX = dataset.X[:,mask]
-
-
-        if not (dataset.features is None):
-            dataset.features = [elem for ix,elem in enumerate(dataset.features) if mask[ix]]
-
-            print (dataset.features)
-
-        return Dataset(newX, dataset.y, dataset.features, dataset.label)
+        features = np.array(dataset.features)[mask] # seleciona as features com valor de threshold superior ao de variance
+        return Dataset(newX, y=dataset.y, features=list(features),label=dataset.label)
 
 
 
     def fit_transform(self, dataset:object) -> object:
+
+        """
+        Corre o fit e depois o transform
+        """
+
         model = self.fit(dataset)
         return model.transform(dataset)
 
