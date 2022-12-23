@@ -58,19 +58,16 @@ class VarianceThreshold:
         return model.transform(dataset)
 
 
-if __main__ == '__main__':
+if __name__ == '__main__':
 
     import numpy as np
 
-    dataset = Dataset (X:np.array([[0, 2, 0, 1]
-                                    [0, 1, 4, 3]
-                                    [0, 1, 1, 3]
-                                    [0, 4, 0, 2])
+    dataset = Dataset (np.array([[0, 2, 0, 1]
+                                   [0, 1, 4, 3]
+                                   [0, 1, 1, 3]
+                                   [0, 4, 0, 2]]),
                       np.array([1,2,3,4]),
                       ["1","2","3","4"], "5")
 
     temp = VarianceThreshold(1)
     print(temp.fit_transform(dataset))
-
-
-
