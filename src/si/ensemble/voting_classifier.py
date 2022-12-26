@@ -1,63 +1,57 @@
 import numpy as np
 
+from si.data.dataset import Dataset
+from si.metrics.accuracy import accurancy
 
 class VotingClassifier:
-    def __int__(self, fit, predict, score):
-        self.fit = fit
-        self.predict = predict
-        self.score = score
+    def __int__(self, models: list):
+        """
 
-    pass
+        :param models: Lista de dados
+        :return:
+        """
+        self.models = models
 
-    self.models = []
-    models = [logisticRegression()
-              ]
-
-
-    def Classifier.fit():
-        for models in self.models:
+    def fit(self, dataset: Dataset) -> 'VotingClassifier':
+        """
+        Fit the model to the dataset
+        :param dataset:Dataset object to fit the model to
+        :return:VotingClassifier
+        """
+        for model in self.models:
             model.fit(dataset)
 
-    def Classifier.predict():
+    def predict(self, dataset) -> np.array:
+        """
+        Combines the previsions of each model with a voting system.
+        :param dataset:Dataset object to predict the labels of.
+        :return:the most represented class
+        """
+        def _get_most_represented_class(pred: np.array) -> int:
+            labels, counts = np.unique(pred, return_counts=True)
+            return labels[np.argmax(counts)]
 
-    pass
+        #list of the predictions
+        predictions = []
 
-#Ensemble (models
-#self.models = []
-#models = [logisticRegression()
-#           KNNclassifier (k=fo)
+        for model in self.models:
+            predictions.append(model.predict(dataset))
 
-# def fit (dataset): #POO
-#   for model in selfmodels:
-#       model.fit(dataset)
+        # computes the most represented class
 
-#def Classifier.predict (models):
+        predictions = np.array(predictions)
+        most_represented_class = np.apply_along_axis(_get_most_represented_class, axis= 0, arr= predictions)
+        return most_represented_class
 
+    def score(self, dataset: Dataset) -> float:
+        """
+        Returns the accuracy of the model.
 
-def predict (self, dataset: Dataset) -> np.ndarray
+        :return:Accuracy of the model.
+        """
+        y_pred = self.predict(dataset)
+        score= accurancy(dataset.y, y_pred)
 
-    def _get_majority_vote(pred: np.ndarray) -> int:
-        labels, counts = np.unique (pred, return_counts=True)
-        return labels[np.argmax(counts)] # conta qual tem a contagem maior
+        return score
 
-    predictions = np.array([model.predict(dataset) for model in self.models]).transpose()
-    return np.apply_along_axis(_get_majority_vote, axis=1, arr=predictions)
-
-
-def score(self, dataset: Dataset)-> float
-
-pass
-
-#abrir jupyter notebook
-
-brest_bin_dataset = read.csv (...)
-from sklearn.processing import StandarScaler
-brest_bin_dataset.X = StandarScaler().fit:transform ()
-
-#slipt_dataset
-
-#voting.classifier
-
-knn= KNNclassifier (k=3)
-lg =LogisticRegression (l2_penalty=1, alpha=0. max_iter=1000)
 
