@@ -1,7 +1,7 @@
 import pandas as pd
 from si.data.dataset import Dataset
 
-def read_csv(filename: str, sep: str = ",", features: bool=False, label: bool=False):
+def read_csv(filename: str, sep: str = ",", features: bool=False, label: bool=False) -> Dataset:
 
     """
     Parametros: filename, nome do ficheiro ou caminho;
@@ -12,40 +12,40 @@ def read_csv(filename: str, sep: str = ",", features: bool=False, label: bool=Fa
     Returns: pandas dataframe
     """
 
-    dataframe = pd.read_csv(filename, delimiter=sep)
+    data = pd.read_csv(filename, delimiter=sep)
     if features and label:
-        features = dataframe.columns[:1]
-        x = dataframe.iloc[1:, 0:, -1].to_numpy()
-        y = dataframe.iloc[:, -1].to_numpy()
+        features = data.columns[:-1]
+        label = data.columns[-1]
+        X = data.iloc[:, :-1].to_numpy() # começar da primeira
+        y = data.iloc[:, -1].to_numpy()
+
+    elif features and not label:
+        features = data.columns
+        X = data.to_numpy()
+        y = None
+
+    elif not features and label:
+        X = data.iloc[:, :-1].to_numpy()
+        y = data.iloc[:, -1]
         features = None
         label = None
 
-    elif features and not label:
-        features = dataframe.columns
+    else: # sem features nem labels
+        X = data.to_numpy()
         y = None
-    elif not features and label:
-        label = dataframe.columns[-1]
-        y = dataframe.iloc[:, -1]
-        data = dataframe.iloc[:, :-1]
-    else:
-        y = None
-    return Dataset(data, y, features, label)
+        features = None
+        label = None
 
-def write_csv(dataset: Dataset, filename: str, sep: str = ',', features: bool = False, label: bool = None):
+    return Dataset(X, y, features, label)
 
-    if features and label:
-        dataframe = pd.DataFrame(dataset.x, columns=dataset.features)
-        dataframe[dataset.labels] = dataset.y
-        dataframe.to_csv(filename, sep=sep, index=False)
+def write_csv(dataset: Dataset, filename: str, sep: str = ',', features: bool = False, label: bool = False) -> None:
 
-    elif features:
-        dataframe = pd.DataFrame(dataset.x, columns=dataset.features)
-        dataframe.to_csv(filename, sep=sep, index=False)
+    if features:
+        data.columns = dataset.features
 
-    elif label:
-        dataframe = pd.DataFrame(dataset.y, columns=dataset.labels)
-        dataframe.to_csv(filename, sep=sep, index=False)
+    if label:
+        data[dataset.label] = dataset.y
 
-    else:
-        dataframe = pd.DataFrame(dataset.x)
-        dataframe.to_csv(filename, sep=sep, index=False)
+    data.to_csv(filename, sep=sep, index= False)
+
+
