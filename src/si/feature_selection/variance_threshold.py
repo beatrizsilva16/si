@@ -14,7 +14,7 @@ class VarianceThreshold:
 
     def __int__(self, threshlod: float = 0.0):
         if threshlod < 0:
-            raise ValueError("Threshold must be positive")
+            raise ValueError("Threshold must be positive.")
 
         self.threshold = threshlod
         self.variance = None  # está vazio porque não vamos calcular variance aqui, não há dataset
