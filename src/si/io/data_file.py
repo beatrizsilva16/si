@@ -1,16 +1,60 @@
-import pandas as pd
+import numpy as np
 from si.data.dataset import Dataset
 
-def read_csv(filename: str, sep: str = ",", features: bool=False, label: bool=False):
+def read_csv(filename: str,
+             sep: str = ",",
+             label: bool=False) -> Dataset:
+    """
+        Reads a data file into a Dataset object
+        Parameters
+        ----------
+        filename : str
+            Path to the file
+        sep : str, optional
+            The separator used in the file, by default None
+        label : bool, optional
+            Whether the file has a label, by default False
+        Returns
+        -------
+        Dataset
+            The dataset object
+        """
+
+    raw_data = np.genfromtxt(filename, delimeter=sep)
+
     if label:
-        data = np.genfromtxt(filename, delimiter=sep)
-        x = data[:, :-1]
-        y = data[:, -1]
+        X = raw_data[:, :-1]
+        y = raw_data[:, -1]
 
     else:
-        x = numpy.genfromtxt(filename, delimiter=sep)
+        X = raw_data
         y = None
 
-    return Dataset(x, y)
+    return Dataset(X, y)
 
-def write_data_file(dataset: Dataset, filename: str, label: bool = False, sep: str = ","):
+    def write_data_file(filename: str,
+                        dataset: Dataset,
+                        sep: str = None,
+                        label: bool = False) -> None:
+        """
+        Writes a Dataset object to a data file
+        Parameters
+        ----------
+        filename : str
+            Path to the file
+        dataset : Dataset
+            The dataset object
+        sep : str, optional
+            The separator used in the file, by default None
+        label : bool, optional
+            Whether to write the file with label, by default False
+        """
+        if not sep:
+            sep = " "
+
+        if label:
+            data = np.hstack((dataset.X, dataset.y.reshape(-1, 1)))
+        else:
+            data = dataset.X
+
+        return np.savetxt(filename, data, delimiter=sep)
