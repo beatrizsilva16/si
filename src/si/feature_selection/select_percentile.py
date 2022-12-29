@@ -30,6 +30,9 @@ class SelectPercentile:
              Percentile to select the features.
         """
 
+        if percentile < 0 or percentile > 1:
+            raise ValueError('The value of percentile ust be in [0,1]')
+
         self.score_func = score_func
         self.percentile = percentile
         self.F_value = None
