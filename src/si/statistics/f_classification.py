@@ -6,6 +6,7 @@ import sys
 sys.path.append("../data")
 from si.data.dataset import Dataset
 
+
 def f_classification(dataset: Dataset) -> Union[Tuple[np.ndarray, np.ndarray],
                                                 Tuple[float, float]]:
     """
@@ -14,7 +15,7 @@ def f_classification(dataset: Dataset) -> Union[Tuple[np.ndarray, np.ndarray],
     :return: F value for each feature.
     """
     classes = dataset.get_classes()
-    groups = [dataset.x[dataset.y == c] for c in classes]  # group the dataset by class
+    groups = [dataset.X[dataset.y == c] for c in classes]  # group the dataset by class
     F, p = stats.f_oneway(*groups)
 
     return F, p

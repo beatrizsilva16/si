@@ -13,6 +13,9 @@ class SelectKBest:
 
     """
     def __init__(self, score_func: Callable = f_classification, k: int = 10):
+
+        if k < 1:
+            raise ValueError('The value of k must be greater than 0.')
         self.score_func = score_func
         self.k = k
         self.F = None
@@ -63,4 +66,3 @@ class SelectKBest:
         """
         self.fit(dataset)
         return self.transform(dataset)
-
