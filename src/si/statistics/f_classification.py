@@ -1,15 +1,20 @@
 from scipy.stats import stats
+from typing import Tuple, Union
+import numpy as np
 
+import sys
+sys.path.append("../data")
 from si.data.dataset import Dataset
 
-def f_classification(dataset: Dataset):
+def f_classification(dataset: Dataset) -> Union[Tuple[np.ndarray, np.ndarray],
+                                                Tuple[float, float]]:
     """
     Calculates the score for each feature for classification tasks.
     :param dataset: Dataset object.
     :return: F value for each feature.
     """
-    classes_dt = dataset.get_classes()
-    groups_dt = [dataset.x[dataset.y == c] for c in classes_dt]  # group the dataset by class
-    f_value, p_value = stats.f_oneway(*groups_dt)
+    classes = dataset.get_classes()
+    groups = [dataset.x[dataset.y == c] for c in classes]  # group the dataset by class
+    F, p = stats.f_oneway(*groups)
 
-    return f_value, p_value
+    return F, p

@@ -1,5 +1,8 @@
 import numpy as np
-from si.data.dataset import Dataset
+import sys
+sys.path.append("../data")
+
+from dataset import Dataset
 
 def read_csv(filename: str,
              sep: str = ",",
@@ -32,10 +35,11 @@ def read_csv(filename: str,
 
     return Dataset(X, y)
 
-    def write_data_file(filename: str,
+def write_data_file(filename: str,
                         dataset: Dataset,
                         sep: str = None,
                         label: bool = False) -> None:
+
         """
         Writes a Dataset object to a data file
         Parameters

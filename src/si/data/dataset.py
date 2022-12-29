@@ -49,12 +49,13 @@ class Dataset:
         # devolve as classes do dataset (valores possíveis de y)
 
         if self.y is None:
-            raise ValueError ('Dataset does not have a label')
+            raise ValueError('Dataset does not have a label')
         return np.unique(self.y)
 
     def get_mean(self) -> np.ndarray:
         # devolve média para cada variável dependente
-        return np.nanmean(self.X, axis=0)  # axis 0: refers to horizontal axis or rows, axis 1: refers to vertical axis or
+        return np.nanmean(self.X, axis=0)
+        # axis 0: refers to horizontal axis or rows, axis 1: refers to vertical axis or
         # columns (exemplos)
 
     def get_variance(self) -> np.ndarray:
@@ -95,9 +96,9 @@ class Dataset:
         """
 
         indexList = [np.any(i) for i in np.isnan(self.X)]
-        self.X = np.delete(self.X, indexList, axis = 0)
+        self.X = np.delete(self.X, indexList, axis=0)
         if self.y is not None:
-            self.y = np.delete(self.y, indexList, axis = 0)
+            self.y = np.delete(self.y, indexList, axis=0)
 
     def fillna(self, value: float):
         """
@@ -108,14 +109,14 @@ class Dataset:
             value: float
                 the value that will replace "null" values (NaN)
         """
-        self.X = np.nan_to_num(self.X, nan = value)
+        self.X = np.nan_to_num(self.X, nan=value)
 
     """
         Class method is a method that is bound to a class rather than its object.
         It doesn't require creation of a class instance
         """
     @classmethod
-    def from_dataframe(cls, df: pd.DataFrame, label: str =None):
+    def from_dataframe(cls, df: pd.DataFrame, label: str = None):
         """
                 Creates a Dataset object from a pandas DataFrame
                 Parameters
@@ -129,7 +130,7 @@ class Dataset:
                 Dataset
         """
         if label:
-            X = df.drop(label, axis = 1).to_numpy()
+            X = df.drop(label, axis=1).to_numpy()
             y = df[label].to_numpy()
 
         else:
@@ -137,7 +138,7 @@ class Dataset:
             y = None
 
         features = df.columns.tolist()
-        return cls(X, y, features = features, label = label)
+        return cls(X, y, features=features, label=label)
 
     def to_dataframe(self) -> pd.DataFrame:
         """
