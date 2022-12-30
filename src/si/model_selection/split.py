@@ -1,44 +1,41 @@
-from si.data.dataset import Dataset
+from random import random
+from typing import Tuple
+
 import numpy as np
 
+from si.data.dataset import Dataset
 
-def train_test_split(dataset: Dataset, test_size: float, random_state: int =42):
 
+def train_test_split(dataset: Dataset, test_size: float = 0.3, random_state: int = 0) -> Tuple[Dataset, Dataset]:
     """
-    Método para dividir um dataset em dataset de treino e teste
-    :param dataset: dataset para dividir em treino e teste
-    :param test_size: tamanho do dataset de teste
-    :param random_state: seed para gerar permutações
-    Return:
+    Split the dataset into training and testing sets.
+    :param dataset: The dataset to split.
+    :param test_size: The proportion of the dataset to include in the test split.
+    :param random_state: The proportion of the dataset to include in the test split.
+    :returns: Tuple[Dataset, Dataset]: The training and test splits.
     """
+    # Set the random seed
+    np.random.seed(random_state)
 
-    # Set the random state
-    data = dataset.shape()[0]
-    np.random.seed(random_state) # Para não obter coisas aleatórias e poder reproduzir esta pipeline sempre que necessário com mesmo resultado
-
-    # Test set size
-    teste_size =test_size
+    # test set size
     n_samples = dataset.shape()[0]
+    split_div = int(n_samples * test_size)
 
-    # Get number of samples in the test set
-    n_test = int(data * test_size)
+    # get the dataset permutations
+    permutations = np.random.permutation(n_samples)
 
-    # Get the dataset permutations
-    permutations = np.random.permutation(data)
+    # get the test and train sets
+    test_idx = permutations[:split_div]
+    train_idx = permutations[split_div:]
 
-    # Get the samples in the test set
-    test_idxs = permutations[:n_test]
+    # get the training and testing datasets
+    train = Dataset(dataset.X[train_idx], dataset.y[train_idx], features_name=dataset.features_names,
+                    label_name=dataset.label_name)
 
-    # Get samples in the training set
-    train_idxs = permutations[n_test:]
+    test = Dataset(dataset.X[test_idx], dataset.y[test_idx], features_names=dataset.features_names,
+                   label_name=dataset.label_name)
 
-    # Get the training and testing datasets
-    train = Dataset(dataset.X[train_idxs], dataset.y[train_idxs], features=dataset.features, label = dataset.label)
-
-    test = Dataset(dataset.X[test_idxs], dataset.y[test_idxs], features= dataset.features, label=dataset.label)
     return train, test
-
-
 
 
 
