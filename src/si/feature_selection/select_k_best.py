@@ -16,7 +16,7 @@ class SelectKBest:
 
         if k < 1:
             raise ValueError('The value of k must be greater than 0.')
-        self.score_func = score_func
+        self.score_func = score_func()
         self.k = k
         self.F = None
         self.p = None
@@ -48,9 +48,11 @@ class SelectKBest:
                dataset: Dataset
                    A labeled dataset with the k highest scoring features.
         """
+
         idxs = np.argsort(self.F)[-self.k:]
-        features = np.array(dataset.features)[idxs]  # selecionar as features com base nos idx
-        return Dataset(X=dataset.X[:, idxs], y=dataset.y, features=list(features), label=dataset.label)
+        new_X = dataset.X[:,idxs]
+        new_feats = np.array(dataset.features)[idxs]  # selecionar as features com base nos idx
+        return Dataset(new_X, dataset.y, list(new_feats), dataset.label)
 
     def fit_transform(self, dataset: Dataset) -> Dataset:
         """

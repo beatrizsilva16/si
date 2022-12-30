@@ -2,8 +2,6 @@ from scipy.stats import stats
 from typing import Tuple, Union
 import numpy as np
 
-import sys
-sys.path.append("../data")
 from si.data.dataset import Dataset
 
 

@@ -11,4 +11,4 @@ def euclidean_distance(x: np.array, y: np.ndarray) -> np.ndarray:
     :return: A np.ndarray of euclidean distance.
     """
 
-    return np.sqrt(np.sum((x - y) ** 2, axis=1))
+    return np.sqrt(((x - y) ** 2).sum(axis=1))
