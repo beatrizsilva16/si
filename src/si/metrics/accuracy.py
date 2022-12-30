@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def accurancy(y_true: np.ndarray, y_pred: np.ndarray):
+def accuracy(y_true: np.ndarray, y_pred: np.ndarray):
     """
     Computes and returns the accurancy score of the model on a given dataset
     :param y_true: np.ndarray - The true values of the labels
