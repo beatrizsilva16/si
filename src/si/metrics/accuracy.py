@@ -8,6 +8,7 @@ def accurancy(y_true: np.ndarray, y_pred: np.ndarray):
     :param y_pred: np.ndarray - the labels predicted by a classifier
     :return:
     """
+    # calculates the number of correct predictions by comparing the true labels with the predicted labels
+    # negative, true positive, false negative and false positive
 
     return np.sum((y_true == y_pred) / len(y_true))
-
