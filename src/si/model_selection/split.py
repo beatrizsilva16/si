@@ -5,7 +5,7 @@ from si.data.dataset import Dataset
 import numpy as np
 
 
-def train_test_split(dataset: Dataset, test_size: float, random_state: int =42)
+def train_test_split(dataset: Dataset, test_size: float, random_state: int =42):
 
     """
     Método para dividir um dataset em dataset de treino e teste
