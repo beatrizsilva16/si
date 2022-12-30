@@ -1,6 +1,3 @@
-from itertools import permutations
-from typing import Tuple
-from typing import Callable
 from si.data.dataset import Dataset
 import numpy as np
 

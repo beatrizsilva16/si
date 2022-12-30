@@ -1,6 +1,7 @@
 import numpy as np
 
-def accurancy(y_true: np.ndarray, y_pred: np.ndarray) -> float:
+
+def accurancy(y_true: np.ndarray, y_pred: np.ndarray):
     """
     Computes and returns the accurancy score of the model on a given dataset
     :param y_true: np.ndarray - The true values of the labels
@@ -8,5 +9,5 @@ def accurancy(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     :return:
     """
 
-    return np.sum (y_true == y_pred) / len(y_true)
+    return np.sum((y_true == y_pred) / len(y_true))
 
