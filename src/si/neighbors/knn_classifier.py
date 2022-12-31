@@ -35,9 +35,6 @@ class KNNClassifier:
                 distance: Callable
                     The distance function to use
         """
-
-        if k < 1:
-            raise ValueError('The value of k must be greater than 0.')
         self.k = k
         self.distance = distance
         self.dataset = None
