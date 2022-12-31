@@ -61,7 +61,6 @@ class KMeans:
         self.centroids = None
         self.labels = None
 
-
     def _init_centroids(self, dataset: Dataset):
         """
         Randomly generates the initial coordinates of the centroids.
@@ -77,7 +76,6 @@ class KMeans:
         seeds = perms[:self.k]
         # random initialization of the centroids (initially, each centroid corresponds to a sample)
         self.centroids = dataset.X[seeds]
-
 
     def _get_closest_centroid(self, sample: np.ndarray) -> int:
         """
@@ -130,7 +128,6 @@ class KMeans:
         # self.labels = new_labels -> only assign in 'predict'?
         return self
 
-
     def _get_distances_to_centroids(self, sample: np.ndarray) -> np.ndarray:
         """
         Computes and returns the distances between a given sample and all centroids.
@@ -140,7 +137,6 @@ class KMeans:
             The sample whose distances to the centroids are to be computed
         """
         return self.distance(sample, self.centroids)
-
 
     def transform(self, dataset: Dataset) -> np.ndarray:
         """
@@ -157,7 +153,6 @@ class KMeans:
         distances_to_centroids = np.apply_along_axis(self._get_distances_to_centroids, axis=1, arr=dataset.X)
         return distances_to_centroids
 
-
     def fit_transform(self, dataset: Dataset) -> np.ndarray:
         """
         Fits KMeans and transforms the dataset by computing the distances of all samples to
@@ -170,7 +165,6 @@ class KMeans:
         """
         self.fit(dataset)
         return self.transform(dataset)
-
 
     def predict(self, dataset: Dataset):
         """
@@ -186,7 +180,6 @@ class KMeans:
         else:
             self.labels = np.apply_along_axis(self._get_closest_centroid, axis=1, arr=dataset.X)
             return self.labels
-
 
     def fit_predict(self, dataset: Dataset):
         """

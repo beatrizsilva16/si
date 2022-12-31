@@ -25,7 +25,7 @@ class KNNClassifier:
         dataset: np.ndarray
             The training data
     """
-    def __init__(self, k: int, distance: euclidean_distance):
+    def __init__(self, k: int = 1, distance: callable = euclidean_distance):
         """
                 Initialize the KNN classifier
                 Parameters
@@ -59,20 +59,21 @@ class KNNClassifier:
         """
 
         # Compute the distance between the sample and the dataset
-        distances = self.distance(sample, self.dataset.x)
+        distances = self.distance(sample, self.dataset.X)
 
         # Sort the distances and get indexes
         knn = np.argsort(distances)[:self.k]  #get the first k indexes of the sorted distances array
 
-        # Get the k nearest neighors
+        # Get the labels of the k nearest neighor
         knn_labels = self.dataset.y[knn]
 
         # Get the most common label
         labels, counts = np.unique(knn_labels, return_counts=True)
 
-        # Gets the most frequent class
-        high_freq_lab = labels[np.argmax(counts)] # ?? get the indexes of the classes with the highest frequency/count
-        return high_freq_lab
+        # return_counts if True returns the number of times each unique item appears in the array
+        return labels[np.argmax(counts)]
+        # to obtain the most common, we must see the label that has more counts
+        # argmax obtains the one label that has more counts
 
     def predict(self, dataset: Dataset) -> np.ndarray:
         """
@@ -86,7 +87,7 @@ class KNNClassifier:
                 predictions: np.ndarray
                     The predictions of the model
         """
-        return np.apply_along_axis(self._get_closet_label, axis=1, arr=dataset.x)
+        return np.apply_along_axis(self._get_closet_label, axis=1, arr=dataset.X)
 
     def score(self, dataset: Dataset) -> float:
         """
