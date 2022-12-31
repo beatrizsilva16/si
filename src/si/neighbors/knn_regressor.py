@@ -47,14 +47,14 @@ class KNNRegressor:
         labels_values = self.dataset.y[label_indexs]
 
         # Compute the mean value and return it
-        return np.man(labels_values)
+        return np.mean(labels_values)
 
     def predict(self, dataset: Dataset) -> np.ndarray:
         """
         Predicts the class with the highest frequency
         :return: Class with the highest frequency.
         """
-        return np.apply_along_axis(self._get_closet_label, axis=1, arr=dataset.x)
+        return np.apply_along_axis(self._get_closet_label, axis=1, arr=dataset.X)
 
     def score(self, dataset: Dataset) -> float:
         """
