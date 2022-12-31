@@ -3,7 +3,7 @@ from cmath import sqrt
 import numpy as np
 
 
-def rmse(y_true: np.ndarray, y_pred: np.ndarray):
+def rmse(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """
     Calculated the Root Mean Squared error.
     :param y_true: An array of true labels.
@@ -11,5 +11,5 @@ def rmse(y_true: np.ndarray, y_pred: np.ndarray):
     :return: The RMSE value.
     """
 
-    rmse = sqrt(np.sum((y_true - y_pred) ** 2) / len(y_true))
-    return rmse
+    N = y_true.shape[0]  # N represents the number of samples
+    return np.sqrt(np.sum((y_true - y_pred) ** 2) / N)  # RMSE formula

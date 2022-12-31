@@ -1,5 +1,6 @@
 import numpy as np
 
+from typing import Union
 from si.data.dataset import Dataset
 from si.metrics.rmse import rmse
 from si.statistics.euclidean_distance import euclidean_distance
