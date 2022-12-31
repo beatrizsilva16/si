@@ -32,8 +32,6 @@ class PCA:
         explained_variance: np.ndarray
         The variances explained by the first <n_components> principal components
         """
-        if n_components < 1:
-            raise ValueError('The value of n_components must be greater than 0.')
 
         self.n_components = n_components
         self.fitted = False
