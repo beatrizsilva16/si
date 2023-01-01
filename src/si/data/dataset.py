@@ -4,21 +4,15 @@ import numpy as np
 
 
 class Dataset:
-    """
-          Dataset represents a machine learning tabular dataset.
-          Parameters:
-          X: numpy.ndarray (n_samples, n_features)
-              The feature matrix
-          y: numpy.ndarray (n_samples, 1)
-              The label vector
-          features: list of str (n_features)
-              The feature names
-          label: str (1)
-              The label name
-    """
 
     def __init__(self, X: np.ndarray, y: np.ndarray = None, features: Sequence[str] = None, label: str = None):
-
+        """
+        It initializes the dataset.
+        :param X: numpy.ndarray, features matrix (n_samples, n_features) - independent variables
+        :param y: np.ndarray, label vector (n_samples, 1) - dependent variable
+        :param features: list of str, features names (n_features)
+        :param label: str, label name
+        """
         if X is None:
             raise ValueError('X cannot be None')
 
@@ -37,15 +31,29 @@ class Dataset:
         self.label = label
 
     def shape(self) -> Tuple[int, int]:
+        """
+        It returns the shape of the dataset.
+        :return: Tuple (n_samples, n_features)
+        """
         # dimensões do dataset, returns : tuple(n_samples, n_features)
         return self.X.shape
 
     def has_label(self) -> bool:
+        """
+        It verifies if the dataset has a label and returns True.
+        Returns Boolean
+        -------
+        bool
+        """
         # verfica se o dataset tem y
         return self.y is not None
         # devolve True ou False
 
     def get_classes(self) -> np.ndarray:
+        """
+        It returns the unique classes (y) in the dataset.
+        :return: np.ndarray
+        """
         # devolve as classes do dataset (valores possíveis de y)
 
         if self.y is None:
@@ -53,31 +61,52 @@ class Dataset:
         return np.unique(self.y)
 
     def get_mean(self) -> np.ndarray:
+        """
+        It returns the mean of each feature.
+        :return: np.ndarray
+        """
         # devolve média para cada variável dependente
         return np.nanmean(self.X, axis=0)
         # axis 0: refers to horizontal axis or rows, axis 1: refers to vertical axis or
         # columns (exemplos)
 
     def get_variance(self) -> np.ndarray:
+        """
+        It returns the variance of each feature.
+        :return: ndarray
+        """
         # devolve variância para cada variável dependente
         return np.nanvar(self.X, axis=0)
 
     def get_median(self) -> np.ndarray:
+        """
+        It returns the median of each feature.
+        :return: ndarray
+        """
         # devolve mediana para cada variável dependente
         return np.nanmedian(self.X, axis=0)
 
     def get_min(self) -> np.ndarray:
+        """
+        It returns the minimum of each feature.
+        :return: ndarray
+        """
         # devolve valor mínimo para cada variável dependente
         return np.nanmin(self.X, axis=0)
 
     def get_max(self) -> np.ndarray:
+        """
+        It returns the maximum of each feature
+        :return: ndarray
+        """
         # devolve valor máximo para cada variável dependente
         return np.nanmax(self.X, axis=0)
 
     def summary(self) -> pd.DataFrame:
         """
-               Returns a pd.DataFrame containing some descriptive metrics (mean, variance, median,
-               minimum value and maximum value) of each feature.
+        It returns a Dataframe with summary of the dataset, which means with the mean, variance, median, minimum
+        value and maximum value for each feature.
+        :return: pandas.Dataframe, DataFrame (n_features, 5)
         """
 
         data = {
@@ -89,6 +118,9 @@ class Dataset:
         }
 
         return pd.DataFrame.from_dict(data, orient='index', columns=self.features)
+
+    # Exercício2: NumPyarray Indexing / Slicing
+    # Implemtação método dropna e fillna
 
     def dropna(self):
         """
