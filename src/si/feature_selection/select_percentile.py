@@ -6,6 +6,7 @@ sys.path.extend(PATHS)
 
 
 from si.statistics.f_classification import f_classification
+#Exercício 3 (3.1. e 3.2.)
 
 
 class SelectPercentile:
