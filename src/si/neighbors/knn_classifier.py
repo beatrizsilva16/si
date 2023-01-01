@@ -39,7 +39,7 @@ class KNNClassifier:
         self.distance = distance
         self.dataset = None
 
-    def fit(self, dataset: Dataset):
+    def fit(self, dataset: Dataset) -> "KNNClassifier":
         """
         Method that stores the dataset
         :param dataset: Dataset object
@@ -71,7 +71,6 @@ class KNNClassifier:
         return labels[np.argmax(counts)]
         # to obtain the most common, we must see the label that has more counts
         # argmax obtains the one label that has more counts
-
 
     def predict(self, dataset: Dataset) -> np.ndarray:
         """

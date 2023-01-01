@@ -16,7 +16,7 @@ class StackingClassifier:
     ----------
     """
 
-    def __init__(self, models, final_model = KNNClassifier):
+    def __init__(self, models: list, final_model=KNNClassifier, weighted: bool = False):
         """
         Initialize the ensemble classifier.
         Parameters
@@ -26,9 +26,12 @@ class StackingClassifier:
         """
         # parameters
         self.models = models
-        self.final = final
+        self.final = final_model
+        self.weighted = weighted
+        # attributes
+        self.scores_sc = None
 
-    def fit(self, dataset: Dataset, final_model=None) -> 'StackingClassifier':
+    def fit(self, dataset: Dataset) -> 'StackingClassifier':
         """
         Fit the models according to the given training data.
         Parameters
@@ -40,13 +43,27 @@ class StackingClassifier:
         self : StackingClassifier
             The fitted model.
         """
+        #fit the ensemble on training data -1
         for model in self.models:
             model.fit(dataset)
 
-        fit = np.array([model.predict(dataset) for model in self.models]).transpose()
-        prev_prd_data = Dataset(X=fit, y=dataset.y)
-        self.final.fit(prev_prd_data)
+        #get the predictions of each model for traning data - 2
+        predictions = np.array([model.predict(dataset) for model in self.models])
 
+        # weigh model predictions based on the respective scores -3
+        if self.weighted:
+            # get model scores
+            scores = [model.score(dataset) for model in self.models]
+            # scale scores so that min_score = 1 (store scores_sc -> use in 'predict')
+            min_scr = min(scores)
+            self.scores_sc = np.array([round((1/min_scr)*scr) for scr in scores])
+            # update predictions in order to account for the computed weights
+            predictions = np.repeat(predictions, repeats=self.scores_sc, axis=0)
+
+        # create a Dataset object containing the predictions
+        ds_train = Dataset(predictions.T, dataset.y)
+        # fit the final model based on the predictions of the ensemble -4
+        self.final_model.fit(ds_train)
         return self
 
     def predict(self, dataset) -> np.ndarray:
