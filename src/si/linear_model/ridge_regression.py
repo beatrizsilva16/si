@@ -147,4 +147,33 @@ class RidgeRegression:
         plt.ylabel('Cost')
         plt.show()
 
+if __name__ == '__main__':
+    # import dataset
+    from si.data.dataset import Dataset
 
+    # make a linear dataset
+    X = np.array([[1, 1], [1, 2], [2, 2], [2, 3]])
+    y = np.dot(X, np.array([1, 2])) + 3
+    dataset_ = Dataset(X=X, y=y)
+
+    # fit the model
+    model = RidgeRegression()
+    model.fit(dataset_)
+
+    # get coefficients
+    print(f"Parameters: {model.theta}")
+
+    # compute the score
+    score = model.score(dataset_)
+    print(f"Score: {score}")
+
+    # compute the cost
+    cost = model.cost(dataset_)
+    print(f"Cost: {cost}")
+
+    # predict
+    y_pred_ = model.predict(Dataset(X=np.array([[3, 5]])))
+    print(f"Predictions: {y_pred_}")
+
+    # plot
+    model.cost_function_plot()
