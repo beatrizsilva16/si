@@ -7,6 +7,7 @@ from typing import Callable
 import sys
 PATHS = ["src/si/data/dataset", "src/si/statistics/euclidean_distance", "src/si/metrics/accuracy/accuracy"]
 sys.path.append(PATHS)
+from typing import Union
 
 
 class KNNClassifier:
