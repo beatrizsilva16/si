@@ -1,12 +1,11 @@
 import numpy as np
 from si.data.dataset import Dataset
+from si.statistics.f_classification import f_classification
 import sys
 PATHS = ["../data", "../statistics"]
 sys.path.extend(PATHS)
 
-
-from si.statistics.f_classification import f_classification
-#Exercício 3 (3.1. e 3.2.)
+#Exercício 3 (3.1 e 3.2)
 
 
 class SelectPercentile:
@@ -27,9 +26,6 @@ class SelectPercentile:
         :param percentile: float
              Percentile to select the features.
         """
-
-        if percentile < 0 or percentile > 1:
-            raise ValueError('The value of percentile ust be in [0,1]')
 
         self.dataset = dataset
         self.score_func = f_classification(dataset)
