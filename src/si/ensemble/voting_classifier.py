@@ -1,57 +1,91 @@
 import numpy as np
 
 from si.data.dataset import Dataset
-from si.metrics.accuracy import accurancy
+from si.metrics.accuracy import accuracy
+
 
 class VotingClassifier:
-    def __int__(self, models: list):
+    """
+    Ensemble classifier that uses the majority vote to predict the class labels.
+    Parameters
+    ----------
+    models : array-like, shape = [n_models]
+        Different models for the ensemble.
+    Attributes
+    ----------
+    """
+    def __init__(self, models):
         """
-
-        :param models: Lista de dados
-        :return:
+        Initialize the ensemble classifier.
+        Parameters
+        ----------
+        models: array-like, shape = [n_models]
+            Different models for the ensemble.
         """
+        # parameters
         self.models = models
 
     def fit(self, dataset: Dataset) -> 'VotingClassifier':
         """
-        Fit the model to the dataset
-        :param dataset:Dataset object to fit the model to
-        :return:VotingClassifier
+        Fit the models according to the given training data.
+        Parameters
+        ----------
+        dataset : Dataset
+            The training data.
+        Returns
+        -------
+        self : VotingClassifier
+            The fitted model.
         """
         for model in self.models:
             model.fit(dataset)
 
-    def predict(self, dataset) -> np.array:
+        return self
+
+    def predict(self, dataset: Dataset) -> np.ndarray:
         """
-        Combines the previsions of each model with a voting system.
-        :param dataset:Dataset object to predict the labels of.
-        :return:the most represented class
+        Predict class labels for samples in X.
+        Parameters
+        ----------
+        dataset : Dataset
+            The test data.
+        Returns
+        -------
+        y : array-like, shape = [n_samples]
+            The predicted class labels.
         """
-        def _get_most_represented_class(pred: np.array) -> int:
+
+        # helper function
+        def _get_majority_vote(pred: np.ndarray) -> int:
+            """
+            It returns the majority vote of the given predictions
+            Parameters
+            ----------
+            pred: np.ndarray
+                The predictions to get the majority vote of
+            Returns
+            -------
+            majority_vote: int
+                The majority vote of the given predictions
+            """
+            # get the most common label
             labels, counts = np.unique(pred, return_counts=True)
             return labels[np.argmax(counts)]
 
-        #list of the predictions
-        predictions = []
-
-        for model in self.models:
-            predictions.append(model.predict(dataset))
-
-        # computes the most represented class
-
-        predictions = np.array(predictions)
-        most_represented_class = np.apply_along_axis(_get_most_represented_class, axis= 0, arr= predictions)
-        return most_represented_class
+        predictions = np.array([model.predict(dataset) for model in self.models]).transpose()
+        return np.apply_along_axis(_get_majority_vote, axis=1, arr=predictions)
 
     def score(self, dataset: Dataset) -> float:
         """
-        Returns the accuracy of the model.
-
-        :return:Accuracy of the model.
+        Returns the mean accuracy on the given test data and labels.
+        Parameters
+        ----------
+        dataset : Dataset
+            The test data.
+        Returns
+        -------
+        score : float
+            Mean accuracy
         """
-        y_pred = self.predict(dataset)
-        score= accurancy(dataset.y, y_pred)
-
-        return score
-
+        return accuracy(dataset.y, self.predict(dataset))
 
