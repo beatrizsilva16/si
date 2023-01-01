@@ -111,6 +111,7 @@ class LogisticRegression:
         return cost
 
     # Exercise 6.2. - add a method that computes a plot of the cost function history of the model
+
     def cost_function_plot(self):
         """
         It plots the cost function history of the model.
