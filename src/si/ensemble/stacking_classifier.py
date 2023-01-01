@@ -1,7 +1,8 @@
 import numpy as np
 
-from si.data.dataset1 import Dataset
+from si.data.dataset import Dataset
 from si.metrics.accuracy import accuracy
+from si.neighbors.knn_classifier import KNNClassifier
 
 
 class StackingClassifier:
@@ -15,7 +16,7 @@ class StackingClassifier:
     ----------
     """
 
-    def __init__(self, models, final):
+    def __init__(self, models, final_model = KNNClassifier):
         """
         Initialize the ensemble classifier.
         Parameters
