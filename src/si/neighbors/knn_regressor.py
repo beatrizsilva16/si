@@ -44,7 +44,7 @@ class KNNRegressor:
         label_indexs = np.argsort(distances)[:self.k]
 
         # Get the labels values of indexes obtained
-        labels_values = self.dataset.y[label_indexs]
+        labels_values = self.dataset.y[label_indexs, ]
 
         # Compute the mean value and return it
         return np.mean(labels_values)

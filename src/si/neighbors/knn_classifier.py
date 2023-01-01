@@ -72,6 +72,7 @@ class KNNClassifier:
         # to obtain the most common, we must see the label that has more counts
         # argmax obtains the one label that has more counts
 
+
     def predict(self, dataset: Dataset) -> np.ndarray:
         """
                 It predicts the classes of the given dataset
