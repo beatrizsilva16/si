@@ -44,7 +44,6 @@ class Dense:
         self.bias = self.bias - learning_rate * np.sum(error, axis=0)
         return error_to_propagate
 
-
 class SigmoidActivation:
     """
      A sigmoid activation layer.
@@ -78,7 +77,6 @@ class SigmoidActivation:
 
 # Exercise 10 - 10.1. Add a new layer SoftMaxActivation
 
-
 class SoftMaxActivation:
     """
     A SoftMax activation layer.
@@ -105,8 +103,6 @@ class SoftMaxActivation:
         return formula
 
 # Exercise 10 - 10.2. Add a new layer ReLUActivation
-
-
 class ReLUActivation:
     """
     A rectified linear (ReLu) activation layer.
@@ -116,7 +112,6 @@ class ReLUActivation:
         Initialize the ReLu activation layer.
         """
         self.X = None
-
     def forward(self, X: np.ndarray) -> np.ndarray:
         """
         It performs a forward pass of the layer using the given input.
@@ -143,8 +138,6 @@ class ReLUActivation:
         return error_to_propagate
 
 # For Exercise 10.5. - Add new layer LinearActivation
-
-
 class LinearActivation:
     """
     A linear activation layer.
@@ -162,6 +155,7 @@ class LinearActivation:
         :return: np.ndarray, the linear relationship
         """
         return input_data
+
 
 
 
