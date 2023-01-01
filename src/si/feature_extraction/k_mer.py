@@ -2,7 +2,6 @@ import itertools
 import numpy as np
 from si.data.dataset import Dataset
 
-
 class KMer:
     """
     A sequence descriptor that returns the k-mer composition of the sequence.
@@ -14,14 +13,14 @@ class KMer:
         """
         # Parameters
         self.k = k
-        self.alphabet = alphabet  # Exercise 9 - add new parameter alphabet
+        self.alphabet = alphabet # Exercise 9 - add new parameter alphabet
 
         # for dna
         if self.alphabet == "dna":
             # alphabet of DNA (nucleotides)
             self.alphabet = "ACTG"
         # for peptide
-        elif self.alphabet == "peptide":  # alphabet of peptides (amino acids)
+        elif self.alphabet == "peptide": # alphabet of peptides (amino acids)
             self.alphabet = "ACDEFGHIKLMNPQRSTVWYXBZJ"
 
         # Attributes
