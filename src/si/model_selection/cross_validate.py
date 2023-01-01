@@ -10,7 +10,7 @@ def cross_validate(model, dataset: Dataset, scoring: Callable = None, cv: int = 
                    test_size: float = 0.2) -> Dict[str, List[float]]:
     """
     It performs cross validation on the given model and dataset.
-    It returns the scores of the model on the dataset in a dictionary containing 3 keys:
+    It returns the scores of the model on the dataset in a dictionary containing 3 keys :
         1. seeds: The seeds used in the train-test split
         2. train: The scores attained with training data
         3. test: The scores obtained with testing data
