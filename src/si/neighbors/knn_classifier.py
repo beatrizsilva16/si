@@ -3,6 +3,7 @@ import numpy as np
 from si.data.dataset import Dataset
 from si.metrics.accuracy import accuracy
 from si.statistics.euclidean_distance import euclidean_distance
+from typing import Callable
 import sys
 PATHS = ["src/si/data/dataset", "src/si/statistics/euclidean_distance", "src/si/metrics/accuracy/accuracy"]
 sys.path.append(PATHS)
@@ -10,95 +11,105 @@ sys.path.append(PATHS)
 
 class KNNClassifier:
     """
-        KNN Classifier
-        The k-Nearst Neighbors classifier is a machine learning model that classifies new samples based on
-        a similarity measure (e.g., distance functions). This algorithm predicts the classes of new samples by
-        looking at the classes of the k-nearest samples in the training data.
+    Implements the K-Nearest Neighbors classifier. Distances between test examples and examples
+    present in the training data can be computed using one of two distinct formulas:
+        - euclidean_distance: sqrt(SUM[(pi - qi)^2])
+        - manhattan_distance: SUM[abs(pi - qi)]
+    """
+
+    def __init__(self, k: int = 4, weighted: bool = False, distance: Callable = euclidean_distance):
+        """
+        Implements the K-Nearest Neighbors classifier. Distances between test examples and examples
+        present in the training data can be computed using one of two distinct formulas:
+            - euclidean_distance: sqrt(SUM[(pi - qi)^2])
+            - manhattan_distance: SUM[abs(pi - qi)]
         Parameters
         ----------
-        k: int
-            The number of nearest neighbors to use
-        distance: Callable
-            The distance function to use
+        k: int (default=4)
+            Number of neighbors to be used
+        weighted: bool (default=False)
+            Whether to weight closest neighbors when predicting labels
+        distance: callable (default=euclidean_distance)
+            Function used to compute the distances
         Attributes
         ----------
-        dataset: np.ndarray
-            The training data
-    """
-    def __init__(self, k: int = 1, distance: callable = euclidean_distance):
+        fitted: bool
+            Whether the model is already fitted
+        weights_vector: np.ndarray
+            The weights to give to each closest neighbor when predicting labels (only applicable
+            when 'weights' is True)
+        dataset: Dataset
+            A Dataset object (training data)
         """
-                Initialize the KNN classifier
-                Parameters
-                ----------
-                k: int
-                    The number of nearest neighbors to use
-                distance: Callable
-                    The distance function to use
-        """
+        # parameters
+        if k < 1:
+            raise ValueError("The value of 'k' must be greater than 0.")
         self.k = k
+        self.weighted = weighted
         self.distance = distance
+        # attributes
+        self.fitted = False
+        if self.weighted:
+            self.weights_vector = np.arange(self.k, 0, -1)
         self.dataset = None
 
     def fit(self, dataset: Dataset) -> "KNNClassifier":
         """
-        Method that stores the dataset
-        :param dataset: Dataset object
-        :return: dataset
+        Stores the training dataset. Returns self.
+        Parameters
+        ----------
+        dataset: Dataset
+            A Dataset object (training data)
         """
         self.dataset = dataset
+        self.fitted = True
         return self
 
-    def _get_closet_label(self, sample: np.array) -> Union[int, str]:
+    def _get_closest_label(self, sample: np.ndarray) -> Union[int, str]:
         """
-                Predicts the class with the highest frequency.
-                :param x: Sample.
-                :return: Indexes of the classes with the highest frequency.
+        Returns the predicted label of the sample given as input. The label is determined by
+        majority vote over the labels of the sample's <self.k> closest neighbors.
+        Parameters
+        ----------
+        sample: np.ndarray
+            The sample to be assigned to a label
         """
-
-        # Compute the distance between the sample and the dataset
+        # compute the distances between a sample and each example in the training dataset
         distances = self.distance(sample, self.dataset.X)
-
-        # Sort the distances and get indexes
-        knn = np.argsort(distances)[:self.k]  #get the first k indexes of the sorted distances array
-
-        # Get the labels of the k nearest neighor
-        knn_labels = self.dataset.y[knn]
-
-        # Get the most common label
+        # determine the indexes of the <k> nearest examples
+        k_nearest_neighbors = np.argsort(distances)[:self.k]
+        # get the classes corresponding to the previous indexes
+        knn_labels = self.dataset.y[k_nearest_neighbors]
+        # tranform labels vector to account for weights (if applicable)
+        if self.weighted:
+            knn_labels = np.repeat(knn_labels, self.weights_vector)
+        # get the most frequent class in the selected <k> examples
         labels, counts = np.unique(knn_labels, return_counts=True)
-
-        # return_counts if True returns the number of times each unique item appears in the array
         return labels[np.argmax(counts)]
-        # to obtain the most common, we must see the label that has more counts
-        # argmax obtains the one label that has more counts
 
     def predict(self, dataset: Dataset) -> np.ndarray:
         """
-                It predicts the classes of the given dataset
-                Parameters
-                ----------
-                dataset: Dataset
-                    The dataset to predict the classes of
-                Returns
-                -------
-                predictions: np.ndarray
-                    The predictions of the model
+        Predicts and returns the classes of the dataset given as input.
+        Parameters
+        ----------
+        dataset: Dataset
+            A Dataset object (testing data)
         """
-        return np.apply_along_axis(self._get_closet_label, axis=1, arr=dataset.X)
+        if not self.fitted:
+            raise Warning("Fit 'KNNClassifier' before calling 'predict'.")
+        return np.apply_along_axis(self._get_closest_label, axis=1, arr=dataset.X)
 
     def score(self, dataset: Dataset) -> float:
         """
-                It predicts the classes of the given dataset
-                Parameters
-                ----------
-                dataset: Dataset
-                    The dataset to predict the classes of
-                Returns
-                -------
-                predictions: np.ndarray
-                    The predictions of the model
+        Calculates the error between the predicted and true classes. To compute the error, it
+        uses the accuracy score: (TP+TN)/(TP+FP+TN+FN). Returns the accuracy score.
+
+        Parameters
+        ----------
+        dataset: Dataset
+            A Dataset object (testing data)
         """
+        if not self.fitted:
+            raise Warning("Fit 'KNNClassifier' before calling 'score'.")
         y_pred = self.predict(dataset)
-        return accuracy(dataset.y, y_pred) # Returns the number of correct predictions divided
-        # by the total number of predictions (accuracy)
-        # The correct predictions are calculated by the predictions and the true values from the dataset
+        return accuracy(dataset.y, y_pred)
