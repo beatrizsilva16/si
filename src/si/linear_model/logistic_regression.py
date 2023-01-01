@@ -129,3 +129,27 @@ class LogisticRegression:
         plt.xlabel('Iteration')
         plt.ylabel('Cost')
         plt.show()
+
+if __name__ == '__main__':
+    # import dataset
+    from si.data.dataset import Dataset
+    from si.model_selection.split import train_test_split
+
+    # load and split the dataset
+    dataset_ = Dataset.from_random(600, 100, 2)
+    dataset_train, dataset_test = train_test_split(dataset_, test_size=0.2)
+
+    # fit the model
+    model = LogisticRegression(l2_penalty=1, alpha=0.001, max_iter=1000)
+    model.fit(dataset_train)
+
+    # compute the score
+    score = model.score(dataset_test)
+    print(f"Score: {score}")
+
+    # compute the cost
+    cost = model.cost(dataset_)
+    print(f"Cost: {cost}")
+
+    # plot
+    model.cost_function_plot()
